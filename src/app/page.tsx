@@ -1,4 +1,5 @@
 import { ModeToggle } from '@/components/mode-toggle';
+import { StartAuthentication } from '@/components/start-authentication';
 
 export default function Home() {
   return (
@@ -6,6 +7,9 @@ export default function Home() {
       <div>THIS IS THE MAIN PAGE</div>
       <div>
         <ModeToggle />
+      </div>
+      <div>
+        <StartAuthentication />
       </div>
     </div>
   );
