@@ -1,7 +1,11 @@
 import { ServerSideComponentProp } from '@/types';
 import * as xss from 'xss';
 import { verifyToken } from '@/util/jwt-util';
-import { JwtPayloadTable } from '@/components/jwt-payload-table';
+import { Base64Img } from '@/components/base64-img';
+import { JWTPayload } from 'jose';
+import { JsonTable } from '@/components/json-value-table';
+import { decodeFromBase64 } from 'next/dist/build/webpack/loaders/utils';
+import * as React from 'react';
 
 type ExpectedSearchParams = {
   code: string;
@@ -23,18 +27,45 @@ export default async function CallbackPage({
 
   const tokenResponse = await obtainAuthToken(code);
 
-  const payload = await verifyToken(tokenResponse.id_token);
+  const payload: JWTPayload = await verifyToken(
+    tokenResponse.id_token,
+    // exampleResponseOttakringer.id_token,
+    {
+      verifyExpiry: false,
+    }
+  );
 
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
+    <div className="flex w-screen flex-col items-center justify-items-center align-middle">
       <div>CALLBACK PAGE</div>
       <div>
         <strong>state</strong>: {state}
       </div>
-      <JwtPayloadTable payload={payload} />
+      <JsonTable data={payload} decodeMap={decodeMap} />
     </div>
   );
 }
+
+const decodeMap: { [key: string]: (value: never) => React.ReactNode | object } =
+  {
+    'org.iso.18013.5.1:portrait': (value) => <Base64Img base64={value} />,
+    'org.iso.18013.5.1:signature_usual_mark': (value) => (
+      <Base64Img base64={value} />
+    ),
+    lichtbild: (value) => <Base64Img base64={value} />,
+    unterschrift: (value) => <Base64Img base64={value} />,
+    'urn:eidgvat:attributes.furtherResidences': (value) =>
+      decodeFromBase64(value),
+    'urn:eidgvat:attributes.idCardData': (value) => decodeFromBase64(value),
+    'urn:eidgvat:attributes.gda': (value) => decodeFromBase64(value),
+    'urn:eidgvat:attributes.identificationDocumentData': (value) =>
+      decodeFromBase64(value),
+    'urn:eidgvat:attributes.mainAddress': (value) => decodeFromBase64(value),
+    'urn:eidgvat:attributes.nationality': (value) => decodeFromBase64(value),
+    'urn:eidgvat:attributes.passportData': (value) => decodeFromBase64(value),
+    'urn:eidgvat:attributes.vehicleRegistrations': (value) =>
+      decodeFromBase64(value),
+  };
 
 async function obtainAuthToken(code: string): Promise<TokenResponse> {
   const myHeaders = new Headers();

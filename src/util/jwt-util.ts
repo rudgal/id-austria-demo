@@ -26,7 +26,7 @@ async function verifyToken(
     const { payload } = await jwtVerify(token, jwks, verifyOptions);
 
     // The token is valid. You can now use the payload.
-    console.log('Decoded JWT payload:', payload);
+    // console.log('Decoded JWT payload:', payload);
     return payload;
   } catch (error) {
     console.error('Error verifying token:', error);
