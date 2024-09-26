@@ -15,10 +15,16 @@ export function StartAuthentication(props: Props) {
     const url = new URL(baseUrl);
 
     url.searchParams.append('response_type', 'code');
-    url.searchParams.append('client_id', 'https://localhost');
+    url.searchParams.append(
+      'client_id',
+      process.env.NEXT_PUBLIC_OIDC_CLIENT_ID
+    );
     url.searchParams.append('scope', 'openid profile');
     url.searchParams.append('state', 'somestate');
-    url.searchParams.append('redirect_uri', 'https://localhost/cb');
+    url.searchParams.append(
+      'redirect_uri',
+      process.env.NEXT_PUBLIC_OIDC_REDIRECT_URI
+    );
 
     window.location.href = url.toString();
   }, []);

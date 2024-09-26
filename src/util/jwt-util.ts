@@ -5,9 +5,9 @@ import {
   JWTVerifyOptions,
 } from 'jose';
 
-const JWKS_URI = process.env.JWKS_URI || '';
-const ISSUER = process.env.JWT_ISSUER || '';
-const AUDIENCE = process.env.JWT_AUDIENCE || '';
+const JWKS_URI = process.env.JWKS_URI;
+const ISSUER = process.env.JWT_ISSUER;
+const AUDIENCE = process.env.JWT_AUDIENCE;
 
 const jwks = createRemoteJWKSet(new URL(JWKS_URI));
 

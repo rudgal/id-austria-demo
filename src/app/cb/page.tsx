@@ -73,9 +73,9 @@ async function obtainAuthToken(code: string): Promise<TokenResponse> {
   const urlencoded = new URLSearchParams();
   urlencoded.append('code', code);
   urlencoded.append('grant_type', 'authorization_code');
-  urlencoded.append('client_secret', process.env.OIDC_CLIENT_SECRET || '');
-  urlencoded.append('redirect_uri', process.env.OIDC_REDIRECT_URI || '');
-  urlencoded.append('client_id', process.env.OIDC_CLIENT_ID || '');
+  urlencoded.append('client_secret', process.env.OIDC_CLIENT_SECRET);
+  urlencoded.append('redirect_uri', process.env.NEXT_PUBLIC_OIDC_REDIRECT_URI);
+  urlencoded.append('client_id', process.env.NEXT_PUBLIC_OIDC_CLIENT_ID);
 
   const requestOptions: RequestInit = {
     method: 'POST',
@@ -84,10 +84,7 @@ async function obtainAuthToken(code: string): Promise<TokenResponse> {
     redirect: 'follow',
   };
 
-  const response = await fetch(
-    process.env.OIDC_TOKEN_ENDPOINT || '',
-    requestOptions
-  );
+  const response = await fetch(process.env.OIDC_TOKEN_ENDPOINT, requestOptions);
   const responseBody: TokenResponse = await response.json();
   return responseBody;
 }
