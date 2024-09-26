@@ -19,9 +19,7 @@ type TokenResponse = {
   id_token: string;
 };
 
-export default async function CallbackPage({
-  searchParams,
-}: ServerSideComponentProp<unknown, ExpectedSearchParams>) {
+export default async function CallbackPage({ searchParams }: ServerSideComponentProp<unknown, ExpectedSearchParams>) {
   const code = xss.filterXSS(searchParams.code || '');
   const state = xss.filterXSS(searchParams.state || '');
 
@@ -46,26 +44,20 @@ export default async function CallbackPage({
   );
 }
 
-const decodeMap: { [key: string]: (value: never) => React.ReactNode | object } =
-  {
-    'org.iso.18013.5.1:portrait': (value) => <Base64Img base64={value} />,
-    'org.iso.18013.5.1:signature_usual_mark': (value) => (
-      <Base64Img base64={value} />
-    ),
-    lichtbild: (value) => <Base64Img base64={value} />,
-    unterschrift: (value) => <Base64Img base64={value} />,
-    'urn:eidgvat:attributes.furtherResidences': (value) =>
-      decodeFromBase64(value),
-    'urn:eidgvat:attributes.idCardData': (value) => decodeFromBase64(value),
-    'urn:eidgvat:attributes.gda': (value) => decodeFromBase64(value),
-    'urn:eidgvat:attributes.identificationDocumentData': (value) =>
-      decodeFromBase64(value),
-    'urn:eidgvat:attributes.mainAddress': (value) => decodeFromBase64(value),
-    'urn:eidgvat:attributes.nationality': (value) => decodeFromBase64(value),
-    'urn:eidgvat:attributes.passportData': (value) => decodeFromBase64(value),
-    'urn:eidgvat:attributes.vehicleRegistrations': (value) =>
-      decodeFromBase64(value),
-  };
+const decodeMap: { [key: string]: (value: never) => React.ReactNode | object } = {
+  'org.iso.18013.5.1:portrait': (value) => <Base64Img base64={value} />,
+  'org.iso.18013.5.1:signature_usual_mark': (value) => <Base64Img base64={value} />,
+  lichtbild: (value) => <Base64Img base64={value} />,
+  unterschrift: (value) => <Base64Img base64={value} />,
+  'urn:eidgvat:attributes.furtherResidences': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.idCardData': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.gda': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.identificationDocumentData': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.mainAddress': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.nationality': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.passportData': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.vehicleRegistrations': (value) => decodeFromBase64(value),
+};
 
 async function obtainAuthToken(code: string): Promise<TokenResponse> {
   const myHeaders = new Headers();
