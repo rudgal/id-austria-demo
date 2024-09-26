@@ -8,5 +8,6 @@ declare namespace NodeJS {
     OIDC_CLIENT_SECRET: string;
     NEXT_PUBLIC_OIDC_CLIENT_ID: string;
     NEXT_PUBLIC_OIDC_REDIRECT_URI: string;
+    NEXT_PUBLIC_OIDC_AUTHORIZATION_URI: string;
   }
 }
