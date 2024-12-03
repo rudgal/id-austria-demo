@@ -1,14 +1,11 @@
 'use client';
-// @flow
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { useCallback } from 'react';
+import Image from 'next/image';
+import type { ButtonProps } from '@/components/ui/button';
 
-type Props = {
-  //
-};
-
-export function StartAuthentication(props: Props) {
+export function ButtonIdaAuthentication(props: ButtonProps) {
   const startAuthentication = useCallback(() => {
     const url = new URL(process.env.NEXT_PUBLIC_OIDC_AUTHORIZATION_URI);
     url.searchParams.append('response_type', 'code');
@@ -19,8 +16,10 @@ export function StartAuthentication(props: Props) {
     window.location.href = url.toString();
   }, []);
   return (
-    <div>
-      <Button onClick={startAuthentication}> Login with ID Austria</Button>
-    </div>
+    <Button {...props} onClick={startAuthentication}>
+      <div className="relative h-full min-w-full">
+        <Image src="/images/id-austria-logo.svg" alt="ID Austria" fill={true} objectFit="contain" />
+      </div>
+    </Button>
   );
 }

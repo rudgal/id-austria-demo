@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple } from 'react-icons/fa';
+import { ButtonIdaAuthentication } from '@/components/button-ida-authentication';
 
 export function LoginForm() {
   return (
@@ -13,7 +14,14 @@ export function LoginForm() {
       <form className="space-y-4">
         <Input type="email" placeholder="Email" />
         <Input type="password" placeholder="Password" />
-        <Button className="w-full">Log In</Button>
+        <Button
+          className="w-full"
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+        >
+          Log In
+        </Button>
       </form>
       <div className="relative">
         <Separator />
@@ -30,9 +38,7 @@ export function LoginForm() {
           <FaApple />
           Apple
         </Button>
-        <Button variant="outline" className="w-full">
-          Custom Federated Login
-        </Button>
+        <ButtonIdaAuthentication variant="outline" className="w-full" />
       </div>
     </div>
   );
