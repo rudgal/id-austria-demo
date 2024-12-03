@@ -1,16 +1,5 @@
-import { ModeToggle } from '@/components/mode-toggle';
-import { StartAuthentication } from '@/components/start-authentication';
+import DemoPage from '@/components/demo-page';
 
 export default function Home() {
-  return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <div>THIS IS THE MAIN PAGE</div>
-      <div>
-        <ModeToggle />
-      </div>
-      <div>
-        <StartAuthentication />
-      </div>
-    </div>
-  );
+  return <DemoPage />;
 }
