@@ -17,9 +17,10 @@ export function ButtonIdaAuthentication(props: ButtonProps) {
   }, []);
   return (
     <Button {...props} onClick={startAuthentication}>
-      <div className="relative h-full min-w-full">
-        <Image src="/images/id-austria-logo.svg" alt="ID Austria" fill={true} objectFit="contain" />
+      <div className="relative h-full w-10">
+        <Image src="/images/id-austria-signet-farbe.svg" alt="ID Austria" fill={true} />
       </div>
+      ID Austria
     </Button>
   );
 }
