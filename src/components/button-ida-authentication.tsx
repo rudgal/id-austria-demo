@@ -18,7 +18,8 @@ export function ButtonIdaAuthentication(props: ButtonProps) {
   return (
     <Button {...props} onClick={startAuthentication}>
       <div className="relative h-full w-10">
-        <Image src="/images/id-austria-signet-farbe.svg" alt="ID Austria" fill={true} />
+        <Image src="/images/id-austria-signet-weiss.svg" alt="ID Austria" fill={true} className="hidden dark:block" />
+        <Image src="/images/id-austria-signet-farbe.svg" alt="ID Austria" fill={true} className="block dark:hidden" />
       </div>
       ID Austria
     </Button>

@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -11,21 +9,14 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <h2 className="text-center text-2xl font-bold">Login Demo</h2>
-      <form className="space-y-4">
+      <div className="space-y-4">
         <Input type="email" placeholder="Email" />
         <Input type="password" placeholder="Password" />
-        <Button
-          className="w-full"
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-        >
-          Log In
-        </Button>
-      </form>
+        <Button className="w-full">Log In</Button>
+      </div>
       <div className="relative">
         <Separator />
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
+        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500 dark:bg-slate-950 dark:text-gray-400">
           Or login with
         </span>
       </div>

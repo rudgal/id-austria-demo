@@ -1,7 +1,7 @@
 export function DemoFooter() {
   return (
-    <footer className="bg-gray-100 py-2">
-      <div className="container mx-auto px-4 text-center text-sm text-gray-600">
+    <footer className="bg-slate-100 py-2 dark:bg-slate-800">
+      <div className="container mx-auto px-4 text-center text-sm text-slate-500 dark:text-slate-400">
         © 2023 Demo Application. All rights reserved.
       </div>
     </footer>
