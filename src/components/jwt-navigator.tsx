@@ -1,13 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ChevronDown, ChevronRight, Clipboard, ChevronUp } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Button } from './ui/button';
 import { decodeJwt } from '@/util/jwt-util';
 import { Base64Img } from '@/components/base64-img';
 import { decodeFromBase64 } from 'next/dist/build/webpack/loaders/utils';
+import { useToast } from '@/hooks/use-toast';
 
 interface JwtNavigatorProps {
   jwt: string;
@@ -40,6 +41,7 @@ const DECODABLE_ATTRIBUTES: { [key: string]: (value: any) => React.ReactNode | o
 } as const;
 
 const TreeNode = ({ label, value, expand = true, decoded = true, depth = 0 }: TreeNodeProps) => {
+  const { toast } = useToast();
   const [isExpanded, setIsExpanded] = useState(expand);
   const [isDecoded, setIsDecoded] = useState(decoded);
   const [isTruncated, setIsTruncated] = useState(true);
@@ -54,11 +56,18 @@ const TreeNode = ({ label, value, expand = true, decoded = true, depth = 0 }: Tr
   const toggleDecoded = () => setIsDecoded(!isDecoded);
   const toggleTruncated = () => setIsTruncated(!isTruncated);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(String(decodedValue)).catch((err) => {
+  const copyToClipboard = useCallback(async () => {
+    const textToCopy = String(decodedValue);
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      toast({
+        title: 'Copied to clipboard',
+        description: textToCopy,
+      });
+    } catch (err) {
       console.error('Failed to copy!', err);
-    });
-  };
+    }
+  }, [decodedValue]);
 
   return (
     <div style={{ marginLeft: `${depth * 20}px` }}>
