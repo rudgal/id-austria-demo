@@ -14,23 +14,22 @@ interface TreeNodeProps {
   label: string;
   value: any;
   depth?: number;
+  initialIsExpanded?: boolean;
 }
 
 // Define which attributes should be decoded and how
 const DECODABLE_ATTRIBUTES = {
   'urn:eidgvat:attributes.mainAddress': {
-    decoder: decodeBase64,
-    label: 'Main Address'
+    decoder: decodeBase64
   },
   'urn:eidgvat:attributes.vehicleRegistrations': {
-    decoder: decodeBase64,
-    label: 'Vehicle Registrations'
+    decoder: decodeBase64
   }
   // Add more attributes as needed
 } as const;
 
-const TreeNode = ({ label, value, depth = 0 }: TreeNodeProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const TreeNode = ({ label, value, depth = 0, initialIsExpanded = false }: TreeNodeProps) => {
+  const [isExpanded, setIsExpanded] = useState(initialIsExpanded);
   const [isDecoded, setIsDecoded] = useState(false);
   
   const isObject = typeof value === 'object' && value !== null;
@@ -48,9 +47,9 @@ const TreeNode = ({ label, value, depth = 0 }: TreeNodeProps) => {
     if (!canDecode || !isDecoded) return null;
     try {
       const decoded = decoder.decoder(value);
-      return typeof decoded === 'string' ? decoded : JSON.stringify(decoded, null, 2);
+      return typeof decoded === 'string' ? decoded : decoded;
     } catch (error) {
-      return `Failed to decode: ${error.message}`;
+      return `Failed to decode: ${(error as Error).message}`;
     }
   };
 
@@ -58,7 +57,7 @@ const TreeNode = ({ label, value, depth = 0 }: TreeNodeProps) => {
 
   return (
     <div style={{ marginLeft: `${depth * 20}px` }}>
-      <div className="flex items-center py-1">
+      <div className="flex items-start py-1">
         {isObject ? (
           <Button
             variant="ghost"
@@ -78,7 +77,7 @@ const TreeNode = ({ label, value, depth = 0 }: TreeNodeProps) => {
         <div className="flex flex-col flex-grow">
           <div className="flex items-center">
             <span className="font-medium mr-2">
-              {DECODABLE_ATTRIBUTES[label as keyof typeof DECODABLE_ATTRIBUTES]?.label || label}:
+              {label}:
             </span>
             {canDecode && (
               <Button
@@ -94,7 +93,7 @@ const TreeNode = ({ label, value, depth = 0 }: TreeNodeProps) => {
           {!isObject && (
             <div className="text-sm text-muted-foreground mt-1">
               <pre className="whitespace-pre-wrap break-all bg-muted rounded-md p-2">
-                {String(displayValue)}
+                {typeof displayValue === 'string' ? displayValue : JSON.stringify(displayValue, null, 2)}
               </pre>
             </div>
           )}
@@ -103,12 +102,13 @@ const TreeNode = ({ label, value, depth = 0 }: TreeNodeProps) => {
 
       {isExpanded && isObject && (
         <div>
-          {Object.entries(value).map(([key, val]) => (
+          {Object.entries(displayValue).map(([key, val]) => (
             <TreeNode
               key={key}
               label={key}
               value={val}
               depth={depth + 1}
+              initialIsExpanded={initialIsExpanded}
             />
           ))}
         </div>
@@ -124,8 +124,8 @@ export function JwtNavigator({ jwt }: JwtNavigatorProps) {
     <ScrollArea className="h-full w-full rounded-md border p-4">
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">JWT Payload</h3>
-        <TreeNode label="root" value={decodedJwt} />
+        <TreeNode label="root" value={decodedJwt} initialIsExpanded={true}/>
       </div>
     </ScrollArea>
   );
-} 
+}
