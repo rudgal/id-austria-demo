@@ -5,8 +5,6 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { DemoSectionLeft } from '@/components/demo-section-left';
-import { DemoSectionRight } from '@/components/demo-section-right';
 
 const inter = Inter({ subsets: ['latin'] });
 

@@ -1,11 +1,12 @@
 import { ServerSideComponentProp } from '@/types';
 import * as xss from 'xss';
 import { verifyToken } from '@/util/jwt-util';
-import { Base64Img } from '@/components/base64-img';
 import { JWTPayload } from 'jose';
-import { JsonTable } from '@/components/json-value-table';
-import { decodeFromBase64 } from 'next/dist/build/webpack/loaders/utils';
 import * as React from 'react';
+import { JwtNavigator } from '@/components/jwt-navigator';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { IoChevronBackOutline } from 'react-icons/io5';
 
 type ExpectedSearchParams = {
   code: string;
@@ -21,7 +22,7 @@ type TokenResponse = {
 
 export default async function CallbackPage({ searchParams }: ServerSideComponentProp<unknown, ExpectedSearchParams>) {
   const code = xss.filterXSS(searchParams.code || '');
-  const state = xss.filterXSS(searchParams.state || '');
+  // const state = xss.filterXSS(searchParams.state || '');
 
   const tokenResponse = await obtainAuthToken(code);
 
@@ -34,30 +35,22 @@ export default async function CallbackPage({ searchParams }: ServerSideComponent
   );
 
   return (
-    <div className="flex w-screen flex-col items-center justify-items-center align-middle">
-      <div>CALLBACK PAGE</div>
-      <div>
-        <strong>state</strong>: {state}
+    <div className="container mx-auto p-4">
+      <div className="my-4 flex items-center justify-between">
+        <h1 className="text-xl font-bold">Token Response from ID Austria IdP</h1>
+        <Button variant="secondary" asChild>
+          <Link href="/">
+            <IoChevronBackOutline />
+            Start over
+          </Link>
+        </Button>
       </div>
-      <JsonTable data={payload} decodeMap={decodeMap} />
+      <div className="h-[72vh]">
+        <JwtNavigator idTokenAsString={JSON.stringify(payload)} />
+      </div>
     </div>
   );
 }
-
-const decodeMap: { [key: string]: (value: never) => React.ReactNode | object } = {
-  'org.iso.18013.5.1:portrait': (value) => <Base64Img base64={value} />,
-  'org.iso.18013.5.1:signature_usual_mark': (value) => <Base64Img base64={value} />,
-  lichtbild: (value) => <Base64Img base64={value} />,
-  unterschrift: (value) => <Base64Img base64={value} />,
-  'urn:eidgvat:attributes.furtherResidences': (value) => decodeFromBase64(value),
-  'urn:eidgvat:attributes.idCardData': (value) => decodeFromBase64(value),
-  'urn:eidgvat:attributes.gda': (value) => decodeFromBase64(value),
-  'urn:eidgvat:attributes.identificationDocumentData': (value) => decodeFromBase64(value),
-  'urn:eidgvat:attributes.mainAddress': (value) => decodeFromBase64(value),
-  'urn:eidgvat:attributes.nationality': (value) => decodeFromBase64(value),
-  'urn:eidgvat:attributes.passportData': (value) => decodeFromBase64(value),
-  'urn:eidgvat:attributes.vehicleRegistrations': (value) => decodeFromBase64(value),
-};
 
 async function obtainAuthToken(code: string): Promise<TokenResponse> {
   const myHeaders = new Headers();

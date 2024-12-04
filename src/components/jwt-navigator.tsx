@@ -11,7 +11,7 @@ import { decodeFromBase64 } from 'next/dist/build/webpack/loaders/utils';
 import { useToast } from '@/hooks/use-toast';
 
 interface JwtNavigatorProps {
-  jwt: string;
+  idTokenAsString: string;
 }
 
 interface TreeNodeProps {
@@ -140,14 +140,11 @@ const TreeNode = ({ label, value, expand = true, decoded = true, depth = 0 }: Tr
   );
 };
 
-export function JwtNavigator({ jwt }: JwtNavigatorProps) {
-  const decodedJwt = decodeJwt(jwt);
-
+export function JwtNavigator({ idTokenAsString }: JwtNavigatorProps) {
   return (
-    <ScrollArea className="h-[80vh] w-full rounded-md border p-4">
+    <ScrollArea className="h-full w-full rounded-md border p-4">
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold">JWT Payload</h3>
-        <TreeNode label="id_token" value={decodedJwt} expand={true} />
+        <TreeNode label="id_token" value={JSON.parse(idTokenAsString)} expand={true} />
       </div>
     </ScrollArea>
   );
