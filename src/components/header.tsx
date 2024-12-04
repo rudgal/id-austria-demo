@@ -1,7 +1,7 @@
 import { ModeToggle } from '@/components/mode-toggle';
 import Image from 'next/image';
 
-export function DemoHeader() {
+export function Header() {
   return (
     <header className="bg-primary text-primary-foreground">
       <div className="flex items-center justify-between px-4 py-2">
