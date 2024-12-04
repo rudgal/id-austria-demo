@@ -1,0 +1,19 @@
+ID Austria is a unified authentication system that enables citizens to securely access both government and private services online.
+It serves as a modern digital identity solution that can be integrated into websites and mobile applications.
+
+### Key Features
+- Provides seamless authentication for Austrian citizens (formerly known as Handy-Signatur/Bürgerkarte)
+- Supports EU Login (eIDAS) for users with foreign eIDs
+- Uses modern security standards with OpenID Connect (OIDC)
+- Can be integrated into both web and mobile applications
+
+### HowTo
+This little technical demo implements the OpenID Connect (OIDC) authentication for ID Austria as described [here](https://eid.egiz.gv.at/anbindung/direkte-anbindung/anbindung-oidc/).
+It uses the publicly available [test system](https://eid.egiz.gv.at/anbindung/testidentitaeten/)
+with a preconfigured [private service provider](https://eid.egiz.gv.at/anbindung/registrierung/registrierung-von-privaten-service-providern/).
+
+1. Choose one of the predefined [test-identities](https://eid.egiz.gv.at/anbindung/testidentitaeten/vordefinierte-testidentitaeten/).
+2. Login with the "ID Austria" button.
+3. Enter the test-identity's credentials.
+4. Upon successful authentication/authorization, you will be redirected back to this app.
+5. Browse all the information available from the ID Austria identity provider.
