@@ -17,11 +17,11 @@ async function verifyToken(token: string, options = { verifyExpiry: true }): Pro
       issuer: process.env.JWT_ISSUER,
       audience: process.env.JWT_AUDIENCE,
     };
-    
+
     if (!options.verifyExpiry) {
       verifyOptions.clockTolerance = Number.MAX_SAFE_INTEGER;
     }
-    
+
     const { payload } = await jwtVerify(token, jwks, verifyOptions);
     return payload;
   } catch (error) {

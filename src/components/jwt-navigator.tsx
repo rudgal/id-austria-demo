@@ -1,10 +1,13 @@
 'use client';
 
+import * as React from 'react';
 import { useState } from 'react';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Button } from './ui/button';
-import { decodeJwt, decodeBase64 } from '@/util/jwt-util';
+import { decodeJwt } from '@/util/jwt-util';
+import { Base64Img } from '@/components/base64-img';
+import { decodeFromBase64 } from 'next/dist/build/webpack/loaders/utils';
 
 interface JwtNavigatorProps {
   jwt: string;
@@ -12,114 +15,88 @@ interface JwtNavigatorProps {
 
 interface TreeNodeProps {
   label: string;
-  value: any;
+  value: object;
+  expand?: boolean;
+  decoded?: boolean;
   depth?: number;
-  initialIsExpanded?: boolean;
 }
 
 // Define which attributes should be decoded and how
-const DECODABLE_ATTRIBUTES = {
-  'urn:eidgvat:attributes.mainAddress': {
-    decoder: decodeBase64
-  },
-  'urn:eidgvat:attributes.vehicleRegistrations': {
-    decoder: decodeBase64
-  }
+const DECODABLE_ATTRIBUTES: { [key: string]: (value: any) => React.ReactNode | object } = {
+  'org.iso.18013.5.1:portrait': (value) => <Base64Img base64={value} />,
+  'org.iso.18013.5.1:signature_usual_mark': (value) => <Base64Img base64={value} />,
+  lichtbild: (value) => <Base64Img base64={value} />,
+  unterschrift: (value) => <Base64Img base64={value} />,
+  'urn:eidgvat:attributes.furtherResidences': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.idCardData': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.gda': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.identificationDocumentData': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.mainAddress': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.nationality': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.passportData': (value) => decodeFromBase64(value),
+  'urn:eidgvat:attributes.vehicleRegistrations': (value) => decodeFromBase64(value),
+  'urn:pvpgvat:oidc.eid_online_identity_link': (value) => decodeJwt(value),
   // Add more attributes as needed
 } as const;
 
-const TreeNode = ({ label, value, depth = 0, initialIsExpanded = false }: TreeNodeProps) => {
-  const [isExpanded, setIsExpanded] = useState(initialIsExpanded);
-  const [isDecoded, setIsDecoded] = useState(false);
-  
-  const isObject = typeof value === 'object' && value !== null;
-  const isString = typeof value === 'string';
-  const decoder = DECODABLE_ATTRIBUTES[label as keyof typeof DECODABLE_ATTRIBUTES];
-  const canDecode = isString && decoder;
-  
-  const handleToggle = () => setIsExpanded(!isExpanded);
-  
-  const toggleDecode = () => {
-    setIsDecoded(!isDecoded);
-  };
+const TreeNode = ({ label, value, expand = true, decoded = false, depth = 0 }: TreeNodeProps) => {
+  const [isExpanded, setIsExpanded] = useState(expand);
+  const [isDecoded, setIsDecoded] = useState(decoded);
+  const [isTruncated, setIsTruncated] = useState(true);
 
-  const getDecodedValue = () => {
-    if (!canDecode || !isDecoded) return null;
-    try {
-      const decoded = decoder.decoder(value);
-      // Try to parse as JSON if it's a string
-      if (typeof decoded === 'string') {
-        try {
-          return JSON.parse(decoded);
-        } catch {
-          return decoded;
-        }
-      }
-      return decoded;
-    } catch (error) {
-      return `Failed to decode: ${(error as Error).message}`;
-    }
-  };
+  const decodableAttribute = DECODABLE_ATTRIBUTES?.[label];
+  const hasDecodableAttribute = !!decodableAttribute;
+  const decodedValue = hasDecodableAttribute && isDecoded ? decodableAttribute(value) : value;
+  const decodedValueIsObject = typeof decodedValue === 'object' && decodedValue !== null;
+  const decodedValueIsValidReactComponent = React.isValidElement(decodedValue);
 
-  const displayValue = isDecoded && canDecode ? getDecodedValue() : value;
-  const isDecodedObject = isDecoded && typeof displayValue === 'object' && displayValue !== null;
+  const toggleExpanded = () => setIsExpanded(!isExpanded);
+  const toggleDecoded = () => setIsDecoded(!isDecoded);
+  const toggleTruncated = () => setIsTruncated(!isTruncated);
 
   return (
     <div style={{ marginLeft: `${depth * 20}px` }}>
       <div className="flex items-start py-1">
-        {(isObject || isDecodedObject) ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="p-1 h-6 w-6"
-            onClick={handleToggle}
-          >
-            {isExpanded ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
+        {decodedValueIsObject && !decodedValueIsValidReactComponent && (
+          <Button variant="ghost" size="sm" className="h-6 w-6 p-1" onClick={toggleExpanded}>
+            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}{' '}
           </Button>
-        ) : (
-          <span className="w-6" />
         )}
-        <div className="flex flex-col flex-grow">
+
+        <div className="flex flex-grow flex-col">
           <div className="flex items-center">
-            <span className="font-medium mr-2">
-              {label}:
-            </span>
-            {canDecode && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6"
-                onClick={toggleDecode}
-              >
+            <span className="mr-2 font-medium">{label}:</span>
+            {hasDecodableAttribute && (
+              <Button variant="ghost" size="sm" className="h-6" onClick={toggleDecoded}>
                 {isDecoded ? 'Show Original' : 'Decode'}
               </Button>
             )}
           </div>
-          {!isObject && !isDecodedObject && (
-            <div className="text-sm text-muted-foreground mt-1">
-              <pre className="whitespace-pre-wrap break-all bg-muted rounded-md p-2">
-                {typeof displayValue === 'string' ? displayValue : JSON.stringify(displayValue, null, 2)}
-              </pre>
+
+          {!decodedValueIsObject && (
+            <div className="mt-1 text-sm text-muted-foreground">
+              <div className="rounded-md bg-muted p-2">
+                <pre className="line-clamp-6 whitespace-pre-wrap break-all">{String(decodedValue)}</pre>
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      {isExpanded && (isObject || isDecodedObject) && (
+      {isExpanded && decodedValueIsObject && (
         <div>
-          {Object.entries(displayValue).map(([key, val]) => (
-            <TreeNode
-              key={key}
-              label={key}
-              value={val}
-              depth={depth + 1}
-              initialIsExpanded={initialIsExpanded}
-            />
-          ))}
+          {decodedValueIsValidReactComponent
+            ? decodedValue
+            : Object.entries(decodedValue)
+                .sort(([keyA], [keyB]) => {
+                  if (!(isNaN(Number(keyA)) || isNaN(Number(keyB)))) {
+                    return Number(keyA) - Number(keyB);
+                  }
+                  return keyA.localeCompare(keyB);
+                })
+                .map(([key, val]) => {
+                  return <TreeNode key={key} label={key} value={val} depth={depth + 1} />;
+                })}
         </div>
       )}
     </div>
@@ -130,10 +107,10 @@ export function JwtNavigator({ jwt }: JwtNavigatorProps) {
   const decodedJwt = decodeJwt(jwt);
 
   return (
-    <ScrollArea className="h-full w-full rounded-md border p-4">
+    <ScrollArea className="h-[80vh] w-full rounded-md border p-4">
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">JWT Payload</h3>
-        <TreeNode label="root" value={decodedJwt} initialIsExpanded={true}/>
+        <TreeNode label="id_token" value={decodedJwt} expand={true} />
       </div>
     </ScrollArea>
   );
