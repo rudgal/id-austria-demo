@@ -47,18 +47,27 @@ const TreeNode = ({ label, value, depth = 0, initialIsExpanded = false }: TreeNo
     if (!canDecode || !isDecoded) return null;
     try {
       const decoded = decoder.decoder(value);
-      return typeof decoded === 'string' ? decoded : decoded;
+      // Try to parse as JSON if it's a string
+      if (typeof decoded === 'string') {
+        try {
+          return JSON.parse(decoded);
+        } catch {
+          return decoded;
+        }
+      }
+      return decoded;
     } catch (error) {
       return `Failed to decode: ${(error as Error).message}`;
     }
   };
 
   const displayValue = isDecoded && canDecode ? getDecodedValue() : value;
+  const isDecodedObject = isDecoded && typeof displayValue === 'object' && displayValue !== null;
 
   return (
     <div style={{ marginLeft: `${depth * 20}px` }}>
       <div className="flex items-start py-1">
-        {isObject ? (
+        {(isObject || isDecodedObject) ? (
           <Button
             variant="ghost"
             size="sm"
@@ -90,7 +99,7 @@ const TreeNode = ({ label, value, depth = 0, initialIsExpanded = false }: TreeNo
               </Button>
             )}
           </div>
-          {!isObject && (
+          {!isObject && !isDecodedObject && (
             <div className="text-sm text-muted-foreground mt-1">
               <pre className="whitespace-pre-wrap break-all bg-muted rounded-md p-2">
                 {typeof displayValue === 'string' ? displayValue : JSON.stringify(displayValue, null, 2)}
@@ -100,7 +109,7 @@ const TreeNode = ({ label, value, depth = 0, initialIsExpanded = false }: TreeNo
         </div>
       </div>
 
-      {isExpanded && isObject && (
+      {isExpanded && (isObject || isDecodedObject) && (
         <div>
           {Object.entries(displayValue).map(([key, val]) => (
             <TreeNode
