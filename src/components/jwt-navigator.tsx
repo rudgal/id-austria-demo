@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useState } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, Clipboard, ChevronUp } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Button } from './ui/button';
 import { decodeJwt } from '@/util/jwt-util';
@@ -39,7 +39,7 @@ const DECODABLE_ATTRIBUTES: { [key: string]: (value: any) => React.ReactNode | o
   // Add more attributes as needed
 } as const;
 
-const TreeNode = ({ label, value, expand = true, decoded = false, depth = 0 }: TreeNodeProps) => {
+const TreeNode = ({ label, value, expand = true, decoded = true, depth = 0 }: TreeNodeProps) => {
   const [isExpanded, setIsExpanded] = useState(expand);
   const [isDecoded, setIsDecoded] = useState(decoded);
   const [isTruncated, setIsTruncated] = useState(true);
@@ -53,6 +53,12 @@ const TreeNode = ({ label, value, expand = true, decoded = false, depth = 0 }: T
   const toggleExpanded = () => setIsExpanded(!isExpanded);
   const toggleDecoded = () => setIsDecoded(!isDecoded);
   const toggleTruncated = () => setIsTruncated(!isTruncated);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(String(decodedValue)).catch((err) => {
+      console.error('Failed to copy!', err);
+    });
+  };
 
   return (
     <div style={{ marginLeft: `${depth * 20}px` }}>
@@ -75,8 +81,30 @@ const TreeNode = ({ label, value, expand = true, decoded = false, depth = 0 }: T
 
           {!decodedValueIsObject && (
             <div className="mt-1 text-sm text-muted-foreground">
-              <div className="rounded-md bg-muted p-2">
-                <pre className="line-clamp-6 whitespace-pre-wrap break-all">{String(decodedValue)}</pre>
+              <div className="relative rounded-md bg-muted p-2">
+                <pre className={`whitespace-pre-wrap break-all ${isTruncated ? 'line-clamp-6' : ''}`}>
+                  {String(decodedValue)}
+                </pre>
+                <div className="absolute right-0 top-0 flex space-x-0.5 rounded-md backdrop-blur-md">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={copyToClipboard}
+                    aria-label="Copy to clipboard"
+                    title="Copy to clipboard"
+                  >
+                    <Clipboard className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleTruncated}
+                    aria-label={isTruncated ? 'Expand text' : 'Collapse text'}
+                    title={isTruncated ? 'Expand text' : 'Collapse text'}
+                  >
+                    {isTruncated ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
             </div>
           )}
