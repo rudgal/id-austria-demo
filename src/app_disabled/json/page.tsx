@@ -20,7 +20,7 @@ export default async function JsonPage() {
       <div className="my-4 flex items-center justify-between">
         <h1 className="text-xl font-bold">Token Response from ID Austria IdP</h1>
         <Button variant="secondary" asChild>
-          <Link href="/">
+          <Link href="/public">
             <IoChevronBackOutline />
             Start over
           </Link>
