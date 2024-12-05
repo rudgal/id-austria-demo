@@ -8,7 +8,7 @@ import { ButtonIdaAuthentication } from '@/components/button-ida-authentication'
 export function LoginForm() {
   return (
     <div className="w-full max-w-md space-y-6">
-      <h2 className="text-center text-2xl font-bold">Login Demo</h2>
+      <h2 className="text-center text-2xl font-bold">Login</h2>
       <div className="space-y-4">
         <Input type="email" placeholder="Email" />
         <Input type="password" placeholder="Password" />

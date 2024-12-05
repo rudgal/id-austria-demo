@@ -19,7 +19,7 @@ export function Header() {
             className="min-w-min dark:hidden"
           />
         </div>
-        <h1 className="text-lg font-semibold">Demo Application</h1>
+        <h1 className="text-lg font-semibold">Login Demo</h1>
         <ModeToggle />
       </div>
     </header>

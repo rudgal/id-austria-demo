@@ -9,8 +9,8 @@ import { Footer } from '@/components/footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Demo Login Application',
-  description: 'A demo login page with Next.js and Tailwind CSS',
+  title: 'Login Demo - ID Austria',
+  description: 'Little app demonstrating the login process with ID Austria',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
