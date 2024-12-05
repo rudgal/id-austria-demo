@@ -23,7 +23,7 @@ interface TreeNodeProps {
 }
 
 // Define which attributes should be decoded and how
-const DECODABLE_ATTRIBUTES: { [key: string]: (value: any) => React.ReactNode | object } = {
+const DECODABLE_ATTRIBUTES: { [key: string]: (value: string) => React.ReactNode | object } = {
   'org.iso.18013.5.1:portrait': (value) => <Base64Img base64={value} />,
   'org.iso.18013.5.1:signature_usual_mark': (value) => <Base64Img base64={value} />,
   lichtbild: (value) => <Base64Img base64={value} />,
@@ -48,7 +48,7 @@ const TreeNode = ({ label, value, expand = true, decoded = true, depth = 0 }: Tr
 
   const decodableAttribute = DECODABLE_ATTRIBUTES?.[label];
   const hasDecodableAttribute = !!decodableAttribute;
-  const decodedValue = hasDecodableAttribute && isDecoded ? decodableAttribute(value) : value;
+  const decodedValue = hasDecodableAttribute && isDecoded ? decodableAttribute(String(value)) : value;
   const decodedValueIsObject = typeof decodedValue === 'object' && decodedValue !== null;
   const decodedValueIsValidReactComponent = React.isValidElement(decodedValue);
 
@@ -67,7 +67,7 @@ const TreeNode = ({ label, value, expand = true, decoded = true, depth = 0 }: Tr
     } catch (err) {
       console.error('Failed to copy!', err);
     }
-  }, [decodedValue]);
+  }, [decodedValue, toast]);
 
   return (
     <div style={{ marginLeft: `${depth * 20}px` }}>
