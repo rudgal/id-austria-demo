@@ -1,0 +1,29 @@
+<div [ngStyle]="{'margin-left.px': depth * 20}">
+  <div class="flex align-items-start py-1">
+    <button *ngIf="isObject(decodedValue) && !isReactComponent(decodedValue)" pButton type="button" icon="pi pi-chevron-down" (click)="toggleExpanded()" [ngClass]="{'pi-chevron-right': !isExpanded, 'pi-chevron-down': isExpanded}"></button>
+    <div class="flex flex-column flex-grow-1">
+      <div class="flex align-items-center">
+        <span class="mr-2 font-medium">{{ label }}:</span>
+        <button *ngIf="hasDecodableAttribute" pButton type="button" label="{{ isDecoded ? 'Show Original' : 'Decode' }}" (click)="toggleDecoded()"></button>
+      </div>
+      <div *ngIf="!isObject(decodedValue)" class="mt-1 text-sm text-muted-foreground">
+        <div class="relative rounded-md bg-muted p-2">
+          <pre class="whitespace-pre-wrap break-all" [ngClass]="{'line-clamp-6': isTruncated}">{{ decodedValue }}</pre>
+          <div class="absolute right-0 top-0 flex space-x-0.5 rounded-md backdrop-blur-md">
+            <button pButton type="button" icon="pi pi-copy" (click)="copyToClipboard()" title="Copy to clipboard"></button>
+            <button pButton type="button" icon="pi" (click)="toggleTruncated()" [ngClass]="{'pi-chevron-down': isTruncated, 'pi-chevron-up': !isTruncated}" title="{{ isTruncated ? 'Expand text' : 'Collapse text' }}"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isExpanded && isObject(decodedValue)">
+    <ng-container *ngIf="isReactComponent(decodedValue); else objectView">
+      <!-- Render React component if applicable -->
+      <ng-container *ngComponentOutlet="decodedValue"></ng-container>
+    </ng-container>
+    <ng-template #objectView>
+      <app-tree-node *ngFor="let entry of objectEntries(decodedValue)" [label]="entry.key" [value]="entry.value" [depth]="depth + 1"></app-tree-node>
+    </ng-template>
+  </div>
+</div> 
