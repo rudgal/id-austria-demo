@@ -18,10 +18,6 @@
     </div>
   </div>
   <div *ngIf="isExpanded && isObject(decodedValue)">
-    <ng-container *ngIf="isReactComponent(decodedValue); else objectView">
-      <!-- Render React component if applicable -->
-      <ng-container *ngComponentOutlet="decodedValue"></ng-container>
-    </ng-container>
     <ng-template #objectView>
       <app-tree-node *ngFor="let entry of objectEntries(decodedValue)" [label]="entry.key" [value]="entry.value" [depth]="depth + 1"></app-tree-node>
     </ng-template>

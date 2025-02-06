@@ -49,4 +49,17 @@ export class TreeNodeComponent implements OnInit {
       console.error('Failed to copy!', err);
     });
   }
+
+  isObject(value: any): boolean {
+    return value && typeof value === 'object' && !Array.isArray(value);
+  }
+
+  isReactComponent(value: any): boolean {
+    // This is a placeholder. Adjust logic if you have specific React component checks.
+    return false;
+  }
+
+  objectEntries(obj: any): { key: string, value: any }[] {
+    return Object.entries(obj).map(([key, value]) => ({ key, value }));
+  }
 } 
