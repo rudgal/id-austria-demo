@@ -36,6 +36,7 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.5.1",
     "@tailwindcss/typography": "^0.5.15",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.0.1",
