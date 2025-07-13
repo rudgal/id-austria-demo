@@ -1,4 +1,10 @@
 import createMDX from '@next/mdx'
+
+// Import OpenNext for development
+if (process.env.NODE_ENV === "development") {
+  const { initOpenNextCloudflareForDev } = await import("@opennextjs/cloudflare/cloudflare-context");
+  await initOpenNextCloudflareForDev();
+}
  
 /** @type {import('next').NextConfig} */
 const nextConfig = {

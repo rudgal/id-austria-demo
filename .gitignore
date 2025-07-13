@@ -37,3 +37,8 @@ next-env.d.ts
 
 certificates
 .idea
+
+# Cloudflare/OpenNext
+.open-next/
+.dev.vars
+.wrangler/
