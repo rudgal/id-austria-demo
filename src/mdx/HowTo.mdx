@@ -1,19 +1,27 @@
-ID Austria is a unified authentication system that enables citizens to securely access both government and private services online.
-It serves as a modern digital identity solution that can be integrated easily alongside other authentication methods of well-known federated identity providers.
+ID Austria is Austria's unified digital identity system that enables citizens to securely access both government and private services online.
+It replaces the legacy Handy-Signatur/Bürgerkarte system with a modern authentication solution based on OpenID Connect (OIDC).
 
 ### Key Features
-- Provides seamless authentication for Austrian citizens (formerly known as Handy-Signatur/Bürgerkarte)
-- Supports EU Login (eIDAS) for users with foreign eIDs
-- Uses modern security standards with OpenID Connect (OIDC)
-- Can be integrated into both web and mobile applications
+- 🔐 Secure authentication for Austrian citizens and residents
+- 🇪🇺 EU Login (eIDAS) support for foreign digital identities
+- 📱 Works seamlessly on web and mobile applications
+- 🛡️ Modern security with OpenID Connect protocol
 
-### HowTo
-This little technical demo implements the OpenID Connect (OIDC) authentication flow for ID Austria as described [here](https://eid.egiz.gv.at/anbindung/direkte-anbindung/anbindung-oidc/).
-It uses the publicly available [test system](https://eid.egiz.gv.at/anbindung/testidentitaeten/)
-with a preconfigured [private service provider](https://eid.egiz.gv.at/anbindung/registrierung/registrierung-von-privaten-service-providern/).
+### How This Demo Works
+This application demonstrates the OIDC authentication flow with ID Austria's test environment:
 
-1. Choose one of the predefined [test-identities](https://eid.egiz.gv.at/anbindung/testidentitaeten/vordefinierte-testidentitaeten/).
-2. Login with the "ID Austria" button.
-3. Enter the test-identity's credentials.
-4. Upon successful authentication/authorization, you will be redirected back to this app.
-5. Browse all the information available from the ID Austria identity provider.
+1. **Click "ID Austria"** - Start the authentication process
+2. **Choose a test identity** - Use one of the [predefined test accounts](https://www.id-austria.gv.at/de/developer/testen/vordefinierte-testidentit%C3%A4ten)
+3. **Enter credentials** - Login with the test identity's username and password
+4. **Authorization** - Grant permission for this app to access your identity data
+5. **Explore the JWT** - View all claims and data returned by ID Austria
+
+### Quick Links
+- 📖 [Integration Guide](https://www.id-austria.gv.at/de/developer/anbinden)
+- 🧪 [Test Identities](https://www.id-austria.gv.at/de/developer/testen/vordefinierte-testidentit%C3%A4ten)
+- 📝 [Developer Registration](https://www.id-austria.gv.at/de/developer/registrieren)
+- 🔍 [Status Monitor](https://www.id-austria.gv.at/de/developer/betreiben/status-monitor)
+
+### ⚠️ Disclaimer
+This is a proof-of-concept demonstration with no guarantees given, not intended for production use.
+The demo exclusively uses ID Austria's test system with synthetic test data. It does not work with real ID Austria accounts or handle any production data. All authentication happens on ID Austria's secure servers using their official OIDC endpoints and JWKS for token verification.
