@@ -1,18 +1,30 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple } from 'react-icons/fa';
 import { ButtonIdaAuthentication } from '@/components/button-ida-authentication';
+import { useToast } from '@/hooks/use-toast';
 
 export function LoginForm() {
+  const { toast } = useToast();
+
+  const handleNotImplemented = () => {
+    toast({
+      title: "Not implemented",
+      description: "This is only for illustration purposes.",
+    });
+  };
+
   return (
     <div className="w-full max-w-md space-y-6">
       <h2 className="text-center text-2xl font-bold">Login</h2>
       <div className="space-y-4">
         <Input type="email" placeholder="Email" />
         <Input type="password" placeholder="Password" />
-        <Button className="w-full">Log In</Button>
+        <Button className="w-full" onClick={handleNotImplemented}>Log In</Button>
       </div>
       <div className="relative">
         <Separator />
@@ -21,11 +33,11 @@ export function LoginForm() {
         </span>
       </div>
       <div className="space-y-2">
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full" onClick={handleNotImplemented}>
           <FcGoogle />
           Google
         </Button>
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full" onClick={handleNotImplemented}>
           <FaApple />
           Apple
         </Button>
