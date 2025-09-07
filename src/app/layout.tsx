@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import Analytics from '@/components/analytics';
+import { TailwindBreakpointHelper } from '@/components/tailwind-breakpoint-helper';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,15 +21,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <Analytics />
       </head>
-      <body className={`${inter.className} ${isDevMode() ? 'responsive-breakpoints-debug' : ''}`}>
+      <body className={`${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="flex h-screen flex-col overflow-hidden">
-            <Header />
-            <main className="flex flex-1 overflow-hidden">{children}</main>
+          <div className="flex min-h-screen flex-col sm:h-screen sm:overflow-hidden">
+            <Header className="sticky top-0 z-50 sm:static" />
+            <main className="flex flex-1 overflow-y-auto sm:overflow-hidden">{children}</main>
             <Footer />
           </div>
           <Toaster />
         </ThemeProvider>
+        {isDevMode() && <TailwindBreakpointHelper />}
       </body>
     </html>
   );
