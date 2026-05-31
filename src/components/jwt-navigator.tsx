@@ -5,9 +5,8 @@ import { useCallback, useState } from 'react';
 import { ChevronDown, ChevronRight, Clipboard, ChevronUp } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Button } from './ui/button';
-import { decodeJwt } from '@/util/jwt-util';
+import { decodeFromBase64, decodeJwt } from '@/util/jwt-util';
 import { Base64Img } from '@/components/base64-img';
-import { decodeFromBase64 } from 'next/dist/build/webpack/loaders/utils';
 import { useToast } from '@/hooks/use-toast';
 
 interface JwtNavigatorProps {

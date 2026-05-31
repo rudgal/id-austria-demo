@@ -13,6 +13,8 @@ type ExpectedSearchParams = {
   state?: string;
 };
 
+export const dynamic = 'force-dynamic';
+
 type TokenResponse = {
   access_token: string;
   token_type: string;
@@ -21,47 +23,44 @@ type TokenResponse = {
 };
 
 export default async function CallbackPage({ searchParams }: ServerSideComponentProp<unknown, ExpectedSearchParams>) {
-  try {
-    const code = xss.filterXSS(searchParams.code || '');
-    // const state = xss.filterXSS(searchParams.state || '');
+  const resolvedSearchParams = await searchParams;
+  const rawCode = Array.isArray(resolvedSearchParams.code) ? resolvedSearchParams.code[0] : resolvedSearchParams.code;
+  const code = xss.filterXSS(rawCode || '');
 
-    if (!code) {
-      throw new Error('Missing authorization code in callback');
-    }
-
-    const tokenResponse = await obtainAuthToken(code);
-
-    if (!tokenResponse.id_token) {
-      throw new Error('No ID token received from token endpoint');
-    }
-
-    const payload: JWTPayload = await verifyToken(
-      tokenResponse.id_token,
-      // exampleResponseOttakringer.id_token,
-      {
-        verifyExpiry: false,
-      }
-    );
-
-    return (
-      <div className="container mx-auto p-4">
-        <div className="my-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold">Token Response from ID Austria IdP</h1>
-          <Button variant="secondary" asChild>
-            <Link href="/">
-              <IoChevronBackOutline />
-              Start over
-            </Link>
-          </Button>
-        </div>
-        <div className="h-[72vh]">
-          <JwtNavigator idTokenAsString={JSON.stringify(payload)} />
-        </div>
-      </div>
-    );
-  } catch (error) {
-    throw error instanceof Error ? error : new Error('An unexpected error occurred during authentication');
+  if (!code) {
+    throw new Error('Missing authorization code in callback');
   }
+
+  const tokenResponse = await obtainAuthToken(code);
+
+  if (!tokenResponse.id_token) {
+    throw new Error('No ID token received from token endpoint');
+  }
+
+  const payload: JWTPayload = await verifyToken(
+    tokenResponse.id_token,
+    // exampleResponseOttakringer.id_token,
+    {
+      verifyExpiry: false,
+    }
+  );
+
+  return (
+    <div className="container mx-auto p-4">
+      <div className="my-4 flex items-center justify-between">
+        <h1 className="text-xl font-bold">Token Response from ID Austria IdP</h1>
+        <Button variant="secondary" asChild>
+          <Link href="/">
+            <IoChevronBackOutline />
+            Start over
+          </Link>
+        </Button>
+      </div>
+      <div className="h-[72vh]">
+        <JwtNavigator idTokenAsString={JSON.stringify(payload)} />
+      </div>
+    </div>
+  );
 }
 
 async function obtainAuthToken(code: string): Promise<TokenResponse> {
@@ -82,12 +81,12 @@ async function obtainAuthToken(code: string): Promise<TokenResponse> {
   };
 
   const response = await fetch(process.env.OIDC_TOKEN_ENDPOINT, requestOptions);
-  
+
   if (!response.ok) {
     const errorText = await response.text();
     throw new Error(`Token exchange failed: ${response.status} ${response.statusText}\n\n${errorText}`);
   }
-  
+
   const responseBody: TokenResponse = await response.json();
   return responseBody;
 }

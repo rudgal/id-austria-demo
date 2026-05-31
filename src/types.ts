@@ -1,8 +1,9 @@
-// see discussion https://github.com/vercel/next.js/discussions/46131
+export type Awaitable<T> = T | Promise<T>;
+
 export interface ServerSideComponentProp<
   Params = undefined,
   SearchParams = { [key: string]: string | string[] | undefined },
 > {
-  params: Params;
-  searchParams: SearchParams;
+  params: Awaitable<Params>;
+  searchParams: Awaitable<SearchParams>;
 }

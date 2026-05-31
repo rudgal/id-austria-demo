@@ -5,7 +5,7 @@
   
   <p><em>A Next.js proof-of-concept demonstrating ID Austria authentication integration using OpenID Connect (OIDC)</em></p>
   
-  [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
+  [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4-38bdf8)](https://tailwindcss.com/)
 </div>
@@ -18,7 +18,7 @@ This application demonstrates how to integrate ID Austria authentication into a 
 
 - 🔐 **Secure Authentication**: OIDC integration with ID Austria's official endpoints
 - 🛡️ **JWT Verification**: Token validation using JWKS from ID Austria
-- 🎨 **Modern UI**: Built with Next.js 14, Tailwind CSS, and shadcn/ui components
+- 🎨 **Modern UI**: Built with Next.js 16, React 19, Tailwind CSS, and shadcn/ui components
 
 ## Authentication Flow
 
@@ -39,7 +39,7 @@ For more info on OIDC heckout the [OpenID Connect documentation](https://openid.
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 22.x and npm
 - IDA Service Provider, [register here](https://www.id-austria.gv.at/de/developer/registrieren).
 
 ### HowTo Run

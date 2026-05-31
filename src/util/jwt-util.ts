@@ -88,4 +88,17 @@ export function decodeBase64(str: string) {
   }
 }
 
+export function decodeFromBase64(str: string) {
+  const normalized = str.replace(/-/g, '+').replace(/_/g, '/');
+  const binary = decodeBase64(normalized);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  const decoded = new TextDecoder().decode(bytes);
+
+  try {
+    return JSON.parse(decoded);
+  } catch {
+    return decoded;
+  }
+}
+
 export { verifyToken };
